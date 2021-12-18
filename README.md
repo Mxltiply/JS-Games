@@ -1,4 +1,4 @@
-# JS-CrashCourse
+# Java Script - CrashCourse
   - 💻 First Project
   ## Games Included:
   1. 🧑 Age In Days Converter
