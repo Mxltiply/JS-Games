@@ -131,3 +131,6 @@ function rpsFrontEnd(humanImageChoice, botImageChoice, finalMessage) {
 
 
 }
+
+// Game 4 : Button Color Changer
+
