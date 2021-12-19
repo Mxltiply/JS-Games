@@ -132,7 +132,7 @@ function rpsFrontEnd(humanImageChoice, botImageChoice, finalMessage) {
 
 }
 
-// Game 4 : Button Color Changer
+// Game 4: Button Color Changer
 
 var all_buttons = document.getElementsByTagName('button');
 
