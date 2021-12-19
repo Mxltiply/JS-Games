@@ -48,6 +48,26 @@
             <img id = "scissors" src = "C:\Users\Admin\Desktop\JS CrashCourse\img\scissors clipart.png" height = 200, width  = 200, alt = "" onclick = "rpsGame(this)">  
         </div>
     </div>
+
+    <div class = "container-4">
+        <h2 id="change-my-color">Game 4: Button Color Changer</h2>
+        <div class="flex-box-pick-color">
+            <form action="">
+                <select name="backdrop" id="background" onchange="buttonColorChange(this)">
+                    <option value="random">Random</option>
+                    <option value="red">Red</option>
+                    <option value="green">Green</option>
+                    <option value="reset">Reset</option>
+                </select> 
+            </form>
+           
+            <button class="btn btn-primary">Apple!</button>
+            <button class="btn btn-danger">Yahoo!</button>
+            <button class="btn btn-warning">Google!</button>
+            <button class="btn btn-success">Comcast!</button>
+            
+        </div>
+    </div>
     
     <script src = "main.js"></script>
 </body>
