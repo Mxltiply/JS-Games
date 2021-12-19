@@ -187,3 +187,15 @@ function randomColors () {
         all_buttons[i].classList.add(choices[randomNumber]);
     }
 }
+
+// Game 5: Blackjack!
+
+let blackjackGame = {
+    'you': 
+}
+
+document.querySelector('#blackjack-hit-button').addEventListener('click', blackjackHit);
+
+function blackjackHit() {
+    alert('ouch!');
+}
