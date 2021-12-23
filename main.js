@@ -198,6 +198,8 @@ let blackjackGame = {
     'wins': 0,
     'losses': 0,
     'draws': 0,
+    'isStand': false,
+    'turnsOver': false, 
 };
 
 //players
@@ -209,7 +211,8 @@ const hitSound = new Audio('img game 5/swish.m4a');
 const winSound = new Audio('img game 5/cash.mp3');
 const lossSound = new Audio('img game 5/aww.mp3');
 const drawSound = new Audio('img game 5/bruh.mp3');
-//buttons
+
+//button click - "ability"
 document.querySelector('#blackjack-hit-button').addEventListener('click', blackjackHit);
 
 document.querySelector('#blackjack-stand-button').addEventListener('click', dealerLogic);
@@ -217,13 +220,12 @@ document.querySelector('#blackjack-stand-button').addEventListener('click', deal
 document.querySelector('#blackjack-deal-button').addEventListener('click', blackjackDeal);
 
 function blackjackHit() {
+    if (blackjackGame['isStand'] === false) {
     let card = randomCard();
-    console.log(card);
     showCard(card, YOU);
     updateScore(card, YOU);
     showScore(YOU);
-    console.log(YOU['score']);
-    
+    }    
 }
 
 function randomCard() {
@@ -241,27 +243,35 @@ function showCard(card, activePlayer) {
 }
 
 function blackjackDeal() {
-    showResult(computeWinner()); 
-    computeWinner(); 
-    let yourImages = document.querySelector('#your-box').querySelectorAll('img');
-    let dealerImages = document.querySelector('#dealer-box').querySelectorAll('img');
+    if (blackjackGame['turnsOver'] === true) {
 
-    for (i=0; i < yourImages.length; i++) {
-        yourImages[i].remove();
+        blackjackGame['isStand'] = false; 
+        let yourImages = document.querySelector('#your-box').querySelectorAll('img');
+        let dealerImages = document.querySelector('#dealer-box').querySelectorAll('img');
+
+        for (i=0; i < yourImages.length; i++) {
+            yourImages[i].remove();
+        }
+
+        for (i=0; i < dealerImages.length; i++) {
+            dealerImages[i].remove();
+        }
+
+        YOU['score'] = 0;
+        DEALER['score'] = 0;
+
+        //resetting text after deal button is pressed
+        document.querySelector('#your-blackjack-result').textContent = 0;
+        document.querySelector('#dealer-blackjack-result').textContent = 0;
+        
+        document.querySelector('#your-blackjack-result').style.color = '#ffffff';
+        document.querySelector('#dealer-blackjack-result').style.color = '#ffffff';
+        
+        document.querySelector('#blackjack-result').textContent = "Let's play!"; 
+        document.querySelector('#blackjack-result').style.color = 'black';
+
+        blackjackGame['turnsOver'] = true; 
     }
-
-    for (i=0; i < dealerImages.length; i++) {
-        dealerImages[i].remove();
-    }
-
-    YOU['score'] = 0;
-    DEALER['score'] = 0;
-
-    document.querySelector('#your-blackjack-result').textContent = 0;
-    document.querySelector('#dealer-blackjack-result').textContent = 0;
-    document.querySelector('#your-blackjack-result').style.color = '#ffffff';
-    document.querySelector('#dealer-blackjack-result').style.color = '#ffffff';
-
 } 
 
 function updateScore(card, activePlayer) {
@@ -288,16 +298,25 @@ function showScore(activePlayer) {
     }
 }
 
-function dealerLogic() { 
-    let card = randomCard(); 
-    showCard(card, DEALER);
-    updateScore(card, DEALER);
-    showScore(DEALER); 
-   
-    if (DEALER['score'] > 15) {
-        let winner = computeWinner(); 
-        showResult(winner);  
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function dealerLogic() { 
+    blackjackGame['isStand'] = true;
+
+    while(DEALER['score'] < 16 && blackjackGame['isStand'] === true) {
+        let card = randomCard(); 
+        showCard(card, DEALER);
+        updateScore(card, DEALER);
+        showScore(DEALER); 
+        await sleep(1000);
     }
+
+    blackjackGame['turnsOver'] = true; 
+    let winner = computeWinner(); 
+    showResult(winner);  
+    
 }
 
 //compute winner and return who just won
@@ -331,29 +350,35 @@ function computeWinner() {
         winner = 'Neither'; 
     }
 
-    console.log('Winner is', winner);
+    console.log(blackjackGame); 
     return winner; 
 }
 
 function showResult(winner) { 
     let message, messageColor; 
 
-    if (winner === YOU) {
-        message = 'You won!';
-        messageColor = 'green';
-        winSound.play(); 
+    if (blackjackGame['turnsOver'] === true) {
 
-    } else if (winner === DEALER) {
-        message = 'You lost!';
-        messageColor = 'red'; 
-        lossSound.play(); 
+        if (winner === YOU) {
+            document.querySelector('#wins').textContent = blackjackGame['wins']; 
+            message = 'You won!';
+            messageColor = 'green';
+            winSound.play(); 
 
-    } else if (winner === 'Neither') {
-        message = 'You drew!';
-        messageColor = 'gray';
-        drawSound.play(); 
+        } else if (winner === DEALER) {
+            document.querySelector('#losses').textContent = blackjackGame['losses']; 
+            message = 'You lost!';
+            messageColor = 'red'; 
+            lossSound.play(); 
+
+        } else if (winner === 'Neither') {
+            document.querySelector('#draws').textContent = blackjackGame['draws']; 
+            message = 'You drew!';
+            messageColor = 'gray';
+            drawSound.play(); 
+        }
+
+        document.querySelector('#blackjack-result').textContent = message; 
+        document.querySelector('#blackjack-result').style.color = messageColor; 
     }
-
-    document.querySelector('#blackjack-result').textContent = message; 
-    document.querySelector('#blackjack-result').style.color = messageColor; 
 }
