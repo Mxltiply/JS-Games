@@ -6,7 +6,3 @@
   3. ✂ Rock, Paper, Scissors
   4. 💧 Button Color Changer
   5. 🃏 Blackjack! 
-
-### License: 
-- Mxltiply © December 2021
- 
